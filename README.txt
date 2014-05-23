@@ -1,10 +1,11 @@
 This project contains 4 utilities:
-    apkRename.sh
-    apkRenameAndInstall.sh
-    setAxmlPkgName.jar   (in lib/)
-    apkSign.sh
+--  name -----------------------------  ------depended utilities------------------
+    apkRename.sh                        java, jar
+    apkRenameAndInstall.sh              java, jar, zip, jarsigner, adb
+    setAxmlPkgName.jar   (in lib/)      java
+    apkSign.sh                          zip, jarsigner
 
---------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 apkRename.sh
 
 Usage: apkRename.sh [OPTIONS] apkPath_or_packageName newPackageName
