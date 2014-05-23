@@ -62,12 +62,8 @@ if [ ! -f "$debugKeyStoreFile" ]; then log "file does not exist: $debugKeyStoreF
 
 if [ "$ADB_OPTION" != "" ]; then log "~~~~ use ADB_OPTION: ${ADB_OPTION[@]}"; fi
 
-count_ok=0
-count_ng=0
-
 renameAppAndInstall() {
     dev="$1"
-    log "-------------------------------------------------------------------------------"
     if "$PROG_DIR/apkRename.sh" "${ADB_OPTION[@]}" -s "$dev" "$packageName" "$newPackageName"; then
         "$PROG_DIR/apkSign.sh" ./tmpForApkRename/app.apk "$debugKeyStoreFile" || exit 1
         if [ $IS_UPDATE_INSTALL == 0 ]; then
@@ -77,14 +73,21 @@ renameAppAndInstall() {
         fi
         log ""
         log "~~~~ install ./tmpForApkRename/app.apk to device $dev"
-        adb "${ADB_OPTION[@]}" -s "$dev" install -r ./tmpForApkRename/app.apk && let count_ok++ || let count_ng++
+        adb "${ADB_OPTION[@]}" -s "$dev" install -r ./tmpForApkRename/app.apk
     fi
 }
 
 if [ "$DEV_SPECIFIED" == "" ]; then
+    count_ok=0
+    count_ng=0
     log "~~~~ enum devices"
     for dev in `adb "${ADB_OPTION[@]}" devices | grep -v "List of devices" | grep -E '	device' | grep -Eo '^[^	]+'`; do
-        renameAppAndInstall "$dev"
+        log "-----------------------------dev $dev -------------------------------------------"
+        if renameAppAndInstall "$dev"; then
+            ((count_ok++))
+        else
+            ((count_ng++))
+        fi
     done
     log ""
     log "Summary:"
