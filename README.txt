@@ -1,5 +1,5 @@
 This project contains 4 utilities:
---  name -----------------------------  ------depended utilities------------------
+--  name -----------------------------  ------depending utilities------------------
     apkRename.sh                        java, jar
     apkRenameAndInstall.sh              java, jar, zip, jarsigner, adb
     setAxmlPkgName.jar   (in lib/)      java
