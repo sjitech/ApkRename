@@ -15,14 +15,16 @@ usage() {
   	log "    meta value(only if start with dot)"
     log ""
 	log "Note:"
-	log " if apkPath_or_packageName ends with .apk then means a apk file to be changed,"
+	log " If apkPath_or_packageName ends with .apk then means a apk file to be changed,"
   	log "   otherwise means a packageName and will pull file from device to:"
   	log "   ./tmpForApkRename/app.apk then change it"
   	log ""
-	log " if newPackageFullName ends with ! then it will remove conflict settings:"
+	log " If newPackageFullName ends with ! then it will remove conflict settings:"
   	log "   <original-package>,<provider>,android:protectionLevel,process,sharedUserId"
     log ""
-    log " for system app, it will pull app's odex file and convert to dex, add to apk"
+    log " For system app, it will pull app's odex file and convert to dex, add to apk."
+    log ""
+    log " The result APK file is not signed, to install it please use apkSign.sh."
     log ""
     log "Options:"
     log "  -H <host>              - Name of adb server host (default: localhost)"
@@ -64,7 +66,7 @@ apkPath_or_packageName="${restArgs[0]}"
 newPackageName="${restArgs[1]}"
 log "~~~~ use newPackageName: $newPackageName"
 
-if (echo "$apkPath_or_packageName" | grep -Eiq '[.]apk$') then
+if echo "$apkPath_or_packageName" | grep -Eiq '[.]apk$'; then
 	apkPath="$apkPath_or_packageName"
 	if [ ! -f "$apkPath" ]; then log "file does not exist: $apkPath"; exit 1; fi
 	packageName=""
@@ -97,7 +99,7 @@ if [ "$packageName" != "" ]; then
 
 	rpath="${rpath//$'\r'/}" #remove \r
 	rpath="${rpath/package:/}" #remove package:
-	if [ "$rpath" == "" ]; then { log "can not get path of package $packageName from device"; exit 1; } fi
+	if [ "$rpath" == "" ]; then log "can not get path of package $packageName from device"; exit 1; fi
 	log "~~~~ remote path: $rpath"
 
 	log ""
@@ -108,10 +110,10 @@ if [ "$packageName" != "" ]; then
 		#
 		# get classes.odex, convert to classes.dex then add to APK
 		#
-		RMT_ODEX_PATH=${rpath%.*}.odex #replace .apk with odex
+		RMT_ODEX_PATH="${rpath%.*}.odex" #replace .apk with odex
 		log ""
 		log "~~~~ pull $RMT_ODEX_PATH"
-		if adb "${ADB_OPTION[@]}" pull $RMT_ODEX_PATH classes.odex; then
+		if adb "${ADB_OPTION[@]}" pull "$RMT_ODEX_PATH" classes.odex; then
 			log ""
 			log "~~~~ pull /system/framework/*.odex"
 			mkdir framework || exit 1
