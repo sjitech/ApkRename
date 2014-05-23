@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Sealed: true
+Main-Class: jp.sji.sumatium.tool.AndroidManifestBinaryXml_ChangePackageName
+Class-Path: lib/axml/axml.jar
