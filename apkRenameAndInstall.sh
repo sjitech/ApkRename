@@ -81,7 +81,7 @@ if [ "$DEV_SPECIFIED" == "" ]; then
     count_ok=0
     count_ng=0
     log "~~~~ enum devices"
-    for dev in `adb "${ADB_OPTION[@]}" devices | grep -v "List of devices" | grep -E '	device' | grep -Eo '^[^	]+'`; do
+    for dev in `adb "${ADB_OPTION[@]}" devices | grep -v "List of devices" | awk '{print $1}'`; do
         log "-----------------------------dev $dev -------------------------------------------"
         if renameAppAndInstall "$dev"; then
             ((count_ok++))
