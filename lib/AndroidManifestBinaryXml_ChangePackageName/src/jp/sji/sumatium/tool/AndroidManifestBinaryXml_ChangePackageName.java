@@ -12,6 +12,7 @@ import pxb.android.axml.NodeVisitor;
 public class AndroidManifestBinaryXml_ChangePackageName {
 
 	static boolean needRemoveConflict;
+	static boolean needRemoveLib;
 	static String newPackageFullName;
 	static boolean changed;
 
@@ -33,8 +34,9 @@ public class AndroidManifestBinaryXml_ChangePackageName {
 				System.exit(1);
 			}
 			Path androidManifestBinXml = Paths.get(args[0]);
-			needRemoveConflict = args[1].endsWith("!");
-			newPackageFullName = needRemoveConflict ? args[1].replace("!", "") : args[1];
+			needRemoveConflict = args[1].contains("!");
+			needRemoveLib = args[1].contains("%");
+			newPackageFullName = args[1].replace("!", "").replace("%", "");
 
 			AxmlReader ar = new AxmlReader(Files.readAllBytes(androidManifestBinXml));
 			AxmlWriter aw = new AxmlWriter();
@@ -72,7 +74,11 @@ public class AndroidManifestBinaryXml_ChangePackageName {
 		@Override
 		public NodeVisitor child(String ns, String name) {
 			// LOG(level + "<" + name + ">");
-			if (needRemoveConflict && ("original-package".equals(name) || "provider".equals(name))) {
+			if (needRemoveConflict && ("original-package".equals(name) || "provider".equals(name)) && ns == null) {
+				LOG("x   " + level + "<" + name + "> will be removed");
+				changed = true;
+				return null;
+			} else if (needRemoveLib && ("uses-library".equals(name)) && ns == null) {
 				LOG("x   " + level + "<" + name + "> will be removed");
 				changed = true;
 				return null;
@@ -102,6 +108,8 @@ public class AndroidManifestBinaryXml_ChangePackageName {
 					val = oldPackageName + val;
 				}
 			} else if (needRemoveConflict && ("protectionLevel".equals(name) || "process".equals(name) || "sharedUserId".equals(name)) && NS.equals(ns)) {
+				name = null;
+			} else if (needRemoveConflict && ("coreApp".equals(name)) && ns == null) {
 				name = null;
 			}
 

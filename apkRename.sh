@@ -124,12 +124,22 @@ if [ "$packageName" != "" ]; then
 			done
 
 			log ""
-			log "~~~~ odex to smali"
+			log "~~~~ convert classes.odex to smali"
 			"$PROG_DIR/lib/smali/baksmali" -d framework -x classes.odex -o smali_out || exit 1
 
+			if [ "$packageName" == "com.android.browser" ]; then
+			    for f in `ls framework/multiwindow.odex framework/sec_feature.odex framework/sec_platform_library.odex framework/sechardware.odex 2>/dev/null`; do
+                    log ""
+                    log "~~~~ convert $f to smali   ***************************************"
+                    "$PROG_DIR/lib/smali/baksmali" -d framework -x "$f" -o smali_out || exit 1
+                done
+                newPackageName="%$newPackageName"
+			fi
+
 			log ""
-			log "~~~~ smali to dex"
+			log "~~~~ convert all smali to classes.dex"
 			"$PROG_DIR/lib/smali/smali" smali_out -o update/classes.dex || exit 1
+
 			needUpdate=1
 		fi
 	fi
