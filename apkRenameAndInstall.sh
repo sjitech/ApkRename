@@ -64,17 +64,16 @@ if [ "$ADB_OPTION" != "" ]; then log "~~~~ use ADB_OPTION: ${ADB_OPTION[@]}"; fi
 
 renameAppAndInstall() {
     dev="$1"
-    if "$PROG_DIR/apkRename.sh" "${ADB_OPTION[@]}" -s "$dev" "$packageName" "$newPackageName"; then
-        "$PROG_DIR/apkSign.sh" ./tmpForApkRename/app.apk "$debugKeyStoreFile" || exit 1
-        if [ $IS_UPDATE_INSTALL == 0 ]; then
-            log ""
-            log "~~~~ uninstall $newPackageName from device $dev"
-            adb "${ADB_OPTION[@]}" -s "$dev" uninstall "${newPackageName/\!/}"  #remove ! char
-        fi
+    "$PROG_DIR/apkRename.sh" "${ADB_OPTION[@]}" -s "$dev" "$packageName" "$newPackageName" || return $?
+    "$PROG_DIR/apkSign.sh" ./tmpForApkRename/app.apk "$debugKeyStoreFile" || return $?
+    if [ $IS_UPDATE_INSTALL == 0 ]; then
         log ""
-        log "~~~~ install ./tmpForApkRename/app.apk to device $dev"
-        adb "${ADB_OPTION[@]}" -s "$dev" install -r ./tmpForApkRename/app.apk
+        log "~~~~ uninstall $newPackageName from device $dev"
+        adb "${ADB_OPTION[@]}" -s "$dev" uninstall "${newPackageName/\!/}"  #remove ! char
     fi
+    log ""
+    log "~~~~ install ./tmpForApkRename/app.apk to device $dev"
+    adb "${ADB_OPTION[@]}" -s "$dev" install -r ./tmpForApkRename/app.apk || return $?
 }
 
 if [ "$DEV_SPECIFIED" == "" ]; then
