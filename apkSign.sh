@@ -15,5 +15,5 @@ zip -d "$apkPath" META-INF/MANIFEST.MF "META-INF/*.SF" "META-INF/*.RSA" "META-IN
 
 log ""
 log "~~~~ add signature"
-jarsigner -keystore "$debugKeyStoreFile" -sigfile CERT -sigalg SHA1withRSA -digestalg SHA -storepass android -keypass android "$apkPath" androiddebugkey || exit 1
+jarsigner -keystore "$debugKeyStoreFile" -sigfile CERT -sigalg SHA1withRSA -digestalg SHA1 -storepass android -keypass android "$apkPath" androiddebugkey || exit 1
 log "OK"
