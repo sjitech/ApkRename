@@ -55,7 +55,7 @@ while (( $# > 0 )); do
             log "invalid option: $1, please use --help to see usage"; exit 1;
             ;;
         *)
-            restArgs+=($1)
+            restArgs+=("$1")
             shift 1
             ;;
     esac

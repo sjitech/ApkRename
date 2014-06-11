@@ -48,7 +48,7 @@ while (( $# > 0 )); do
             usage
             ;;
         *)
-            restArgs+=($1)
+            restArgs+=("$1")
             shift 1
             ;;
     esac
