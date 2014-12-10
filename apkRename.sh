@@ -32,6 +32,7 @@ usage() {
     log "  -s <devSerialNumber>   - Device Serial Number or qualifier"
     log
     log "Examples:"
+    log " $PROG_NAME /tmp/old.apk        com.exampe.newapp "
     log " $PROG_NAME com.example.app     com.exampe.newapp "
     log " $PROG_NAME com.android.browser com.exampe.newapp!"
     log " $PROG_NAME -s HTC123123 com.android.browser com.exampe.newapp!"
