@@ -33,6 +33,7 @@ Options:
   -s <devSerialNumber>   - Device Serial Number or qualifier
 
 Examples:
+ apkRename.sh /tmp/test.apk       com.exampe.newapp
  apkRename.sh com.example.app     com.exampe.newapp
  apkRename.sh com.android.browser com.exampe.newapp!
  apkRename.sh -s HTC123123 com.android.browser com.exampe.newapp!
